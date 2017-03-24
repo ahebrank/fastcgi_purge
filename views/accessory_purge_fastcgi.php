@@ -1,31 +1,47 @@
-<small style="position:relative; top: -3px;">Enter URL starting with slash (not http etc) or leave blank to purge everything.</small><br>
-<div style="position:relative;">
-<input id="purge_url" type="text" style="width:350px; margin:0 3px 0 0;">
-<button id="purge_fastcgi" href="#" style="height:100%;position:absolute;">Purge</button>
+<style>
+	.fastcgi-purge--inputs > * {
+		display: inline-block;
+	}
+	.fastcgi-purge--message {
+		float: right;
+	}
+</style>
+<div class="fastcgi-purge--wrapper">
+	<div id="fastcgi_purge_message" class="fastcgi-purge--message">
+	</div>
+	<div class="fastcgi-purge--inputs">
+		<label>Enter relative URL or leave blank to purge everything.
+			<input id="purge_url" type="text" placeholder="/example-url">
+		</label>
+		<input type="submit" id="purge_fastcgi" value="Purge">
+	</div>
 </div>
 <script type="text/javascript" charset="utf-8">
-	$(document).ready(function()
-	{
-		
-		$('#purge_fastcgi').click(function(event)
-		{
-			event.preventDefault();
+	(function($) {
+		function setMessage(msg) {
+			$('#fastcgi_purge_message').html('<p>' + msg + '</p>');
+		}
+
+		$('#purge_fastcgi').click(function(e) {
+			e.preventDefault();
+			var url = $('#purge_url').val();
+
+			if( !(url == '' || url.match(/^\/[^\/]/)) ) { 
+				setMessage('URL must be empty or start with one "/"');
+				return;
+			}
 			
-			var url = $('#purge_url').val(); 
-			if( ! url.match(/^\/[^\/]/) ) { alert('URL must start with one "/"'); return; }
+			setMessage('Sending purge request...');
 			
-			$('#purge_url').val('Sending purge request...');
-			
-			$.post("<?=$request_url?>",
+			$.post("<?=$request_url?>", 
 				{
 					purge_url: url,
 					XID: EE.XID
-				}, function(data)
-				{
-					$('#purge_url').val('');
+				}, function(data) {
+					setMessage(data + ' URLs cleared from cache');
 				}
 			);
 		});
-	});
+	})(jQuery);
 	
 </script>

@@ -28,7 +28,7 @@ require_once PATH_THIRD.'fastcgi_purge/config.php';
  
 class Fastcgi_purge_acc
 {	
-	public $name        = FASTCGI_PURGE_NAME;
+	public $name        = 'Purge FastCGI cache';
 	public $id          = 'fastcgi_purge';
 	public $version     = FASTCGI_PURGE_VERSION;
 	public $description = 'Provides a place to manually send a purge request to fastcgi.';
@@ -40,7 +40,7 @@ class Fastcgi_purge_acc
 	public function set_sections()
 	{	
 		$data['request_url'] = html_entity_decode(BASE.AMP.'C=addons_accessories'.AMP.'M=process_request'.AMP.'accessory=fastcgi_purge'.AMP.'method=process_purge_request');
-		$this->sections['Purge Fastcgi'] = ee()->load->view('accessory_purge_fastcgi', $data, TRUE);
+		$this->sections['Purge'] = ee()->load->view('accessory_purge_fastcgi', $data, TRUE);
 	}
 	
 	/**
@@ -51,8 +51,8 @@ class Fastcgi_purge_acc
 		if (AJAX_REQUEST)
 		{
 			ee()->load->helper('fastcgi');
-			fastcgi_purge(ee()->config->item('fastcgi_cache_dir'), $_POST['purge_url']);
-			die(); 
+			$url_count = fastcgi_purge(ee()->config->item('fastcgi_cache_dir'), $_POST['purge_url']);
+			die($url_count); 
 		}
 	}
 }

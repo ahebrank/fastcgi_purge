@@ -10,23 +10,27 @@ if ( ! function_exists('fastcgi_purge'))
 	function fastcgi_purge($cache_dir, $purge_url) {
 		$cache_dir = rtrim($cache_dir, '/');
 		if (!is_dir($cache_dir)) {
-			return FALSE;
+			return 0;
 		}
 		// just an extra check
 		if (strpos($cache_dir, '/cache') === FALSE) {
-			return FALSE;
+			return 0;
 		}
 
 		if (empty($purge_url)) {
-			array_map('unlink', glob($cache_dir . "/*/*/*"));
+			$to_remove = glob($cache_dir . "/*/*/*");
+			array_map('unlink', $to_remove);
+			return count($to_remove);
 		}
 		else {
 			$hash = md5($purge_url);
-			$cache_file = $cache_dir . '/' . substr($hash, -1) . '/' . substr($hash,-3,2) . '/' . $hash;
-			if (file_exists($cache_file)) {
+			$cache_file = realpath($cache_dir . '/' . substr($hash, -1) . '/' . substr($hash,-3,2) . '/' . $hash);
+			// make sure the canonicalized cache directory is still the same
+			if (strpos($cache_file, $cache_dir) === 0 && file_exists($cache_file)) {
 				unlink($cache_file);
+				return 1;
 			}
 		}
-		return true;
+		return 0;
 	}
 }
