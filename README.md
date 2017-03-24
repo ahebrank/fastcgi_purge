@@ -36,9 +36,9 @@ server {
 		include fastcgi_params;
 		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 		fastcgi_cache_bypass $skip_cache;
-	    	fastcgi_no_cache $skip_cache;
+		fastcgi_no_cache $skip_cache;
 		fastcgi_cache EE;
-		fastcgi_cache_valid  60m;
+		fastcgi_cache_valid 1d;
 		# if you want to see HIT vs. MISS
 		add_header X-Cache $upstream_cache_status;
 	}
