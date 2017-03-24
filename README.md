@@ -8,10 +8,10 @@ This module is based on [Purge](https://github.com/kevincupp/purge.ee2_addon) fo
 
 ## Nginx setup
 
-As a safety feature, the cache path must have 'cache' in it and be an existing directory.
+As a safety feature, the cache path must have 'cache' in it and be an existing directory. Leave the cache levels as `1:2` to ensure the EE hash function matches the Nginx config.
 
 ```
-fastcgi_cache_path /etc/nginx/path levels=1:2 keys_zone=EE:100m inactive=1d; # set cache path lifetime
+fastcgi_cache_path /etc/nginx/cache levels=1:2 keys_zone=EE:100m inactive=1d; # set cache path lifetime
 fastcgi_cache_key "$request_uri"; # this keying is required for individual page purge requests to succeed
 fastcgi_cache_use_stale error timeout invalid_header http_500;
 fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
