@@ -52,7 +52,8 @@ class Fastcgi_purge_acc
 		{
 			ee()->load->helper('fastcgi');
 			$url_count = fastcgi_purge(ee()->config->item('fastcgi_cache_dir'), $_POST['purge_url']);
-			die($url_count); 
+			echo $url_count;
+			die();
 		}
 	}
 }
